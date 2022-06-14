@@ -1,10 +1,14 @@
 import { Heading, Image, Text } from "@chakra-ui/react";
+import { useAppSelector } from "app/hooks";
+import { wrapper } from "app/store";
 import { QuizAnswerInput } from "components/quiz/game/QuizAnswerInput";
+import { getCookie } from "cookies-next";
+import { selectNickname, setNickname } from "features/nickname";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { QuizGameLayout } from "layouts";
-import { FC, useState } from "react";
+import { NextPage, GetServerSideProps } from "next";
 
-const QuizGame: FC = () => {
+const QuizGame: NextPage = () => {
   return (
     <QuizGameLayout quizCategory={"인물"} remainingTime={10}>
       <Heading
@@ -50,4 +54,24 @@ const QuizGame: FC = () => {
   );
 };
 
+export const getServerSideProps = wrapper.getServerSideProps((store) =>
+  //@ts-ignore
+  async ({ req, res }) => {
+    const _nickname = getCookie("nickname", { req, res });
+    if (typeof _nickname === "string") {
+      store.dispatch(setNickname(_nickname));
+    }
+    const {
+      nickname: { nickname },
+    } = store.getState();
+    if (nickname === "") {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/quiz/start",
+        },
+      };
+    }
+  }
+);
 export default QuizGame;

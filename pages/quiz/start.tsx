@@ -12,18 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { QuizStartLayout } from "@layouts/quiz";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
+import { selectNickname, setNickname } from "features/nickname";
+import { useAppDispatch, useAppSelector } from "app/hooks";
+import { setCookies } from "cookies-next";
 
-interface NicknameSectionProps {
-  setNickname: Dispatch<SetStateAction<string>>;
-}
-
-interface StartSectionProps {
-  nickname: string;
-  setNickname: Dispatch<SetStateAction<string>>;
-}
-
-const NicknameSection: FC<NicknameSectionProps> = ({ setNickname }) => {
+const NicknameSection: FC = () => {
+  const dispatch = useAppDispatch();
   const [_nickname, _setNickname] = useState("");
   return (
     <Flex
@@ -59,14 +54,18 @@ const NicknameSection: FC<NicknameSectionProps> = ({ setNickname }) => {
         colorScheme={"gray"}
         aria-label="Set Nickname"
         icon={<ArrowForwardIcon />}
-        onClick={() => setNickname(_nickname)}
+        onClick={() => {
+          dispatch(setNickname(_nickname));
+        }}
       />
     </Flex>
   );
 };
 
-const StartSection: FC<StartSectionProps> = ({ nickname, setNickname }) => {
+const StartSection: FC = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const nickname = useAppSelector(selectNickname);
   return (
     <>
       <Flex
@@ -90,7 +89,7 @@ const StartSection: FC<StartSectionProps> = ({ nickname, setNickname }) => {
       <Text
         fontSize={"3xl"}
         onClick={() => {
-          setNickname("");
+          dispatch(setNickname(""));
         }}
       >
         {nickname} 님
@@ -111,7 +110,11 @@ const StartSection: FC<StartSectionProps> = ({ nickname, setNickname }) => {
           }}
           colorScheme={"brand"}
           marginTop={"4rem"}
-          onClick={() => router.push("/quiz/room")}
+          onClick={() => {
+            setCookies("nickname", nickname);
+
+            router.push("/quiz/room");
+          }}
         >
           시작하기
         </Button>
@@ -121,7 +124,7 @@ const StartSection: FC<StartSectionProps> = ({ nickname, setNickname }) => {
 };
 
 const QuizStart: NextPage = () => {
-  const [nickname, setNickname] = useState("");
+  const nickname = useAppSelector(selectNickname);
   return (
     <QuizStartLayout>
       <Head>
@@ -129,11 +132,7 @@ const QuizStart: NextPage = () => {
         <meta name="description" content="Eggjamgame. Quiz Lobby" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {nickname === "" ? (
-        <NicknameSection setNickname={setNickname} />
-      ) : (
-        <StartSection nickname={nickname} setNickname={setNickname} />
-      )}
+      {nickname === "" ? <NicknameSection /> : <StartSection />}
     </QuizStartLayout>
   );
 };

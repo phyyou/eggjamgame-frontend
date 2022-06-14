@@ -8,6 +8,10 @@ import {
   SelectBox,
 } from "components/quiz/room";
 import { useRouter } from "next/router";
+import { wrapper } from "app/store";
+import { useAppSelector } from "app/hooks";
+import { setNickname } from "features/nickname";
+import { getCookie } from "cookies-next";
 
 const QuizRoom: NextPage = () => {
   const router = useRouter();
@@ -48,5 +52,24 @@ const QuizRoom: NextPage = () => {
     </QuizLobbyLayout>
   );
 };
-
+export const getServerSideProps = wrapper.getServerSideProps((store) =>
+  //@ts-ignore
+  async ({ req, res }) => {
+    const _nickname = getCookie("nickname", { req, res });
+    if (typeof _nickname === "string") {
+      store.dispatch(setNickname(_nickname));
+    }
+    const {
+      nickname: { nickname },
+    } = store.getState();
+    if (nickname === "") {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/quiz/start",
+        },
+      };
+    }
+  }
+);
 export default QuizRoom;
