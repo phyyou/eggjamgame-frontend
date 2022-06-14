@@ -10,8 +10,15 @@ import {
   Button,
   Fade,
   Container,
+  BoxProps,
+  FlexProps,
+  Collapse,
+  Input,
+  IconButton,
 } from "@chakra-ui/react";
-import { QuizLobbyLayout } from "@layouts/quiz";
+import { QuizStartLayout } from "@layouts/quiz";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router"
 
 interface NicknameSectionProps {
   setNickname: Dispatch<SetStateAction<string>>;
@@ -19,9 +26,11 @@ interface NicknameSectionProps {
 
 interface StartSectionProps {
   nickname: string;
+  setNickname: Dispatch<SetStateAction<string>>;
 }
 
 const NicknameSection: FC<NicknameSectionProps> = ({ setNickname }) => {
+  const [_nickname, _setNickname] = useState("");
   return (
     <Flex
       marginTop={{ base: "25vh", md: "19rem" }}
@@ -32,15 +41,38 @@ const NicknameSection: FC<NicknameSectionProps> = ({ setNickname }) => {
       height={"33%"}
       width={"100%"}
       backgroundColor={"rgba(255 212 148 / 1)"}
+      flexDir="row"
     >
-      <Container>
-
-      </Container>
+      <Input
+        width={{ base: "75%", md: "33%" }}
+        colorScheme={"gray"}
+        textAlign={"center"}
+        variant={"flushed"}
+        fontSize={"3xl"}
+        placeholder={"닉네임을 입력하세요"}
+        _placeholder={{
+          color: "#844F00",
+          textAlign: "center",
+        }}
+        value={_nickname}
+        onChange={(e) => {
+          _setNickname(e.target.value);
+        }}
+      />
+      <IconButton
+        ml={"1rem"}
+        borderRadius={"full"}
+        colorScheme={"gray"}
+        aria-label="Set Nickname"
+        icon={<ArrowForwardIcon />}
+        onClick={() => setNickname(_nickname)}
+      />
     </Flex>
   );
 };
 
-const StartSection: FC<StartSectionProps> = ({ nickname }) => {
+const StartSection: FC<StartSectionProps> = ({ nickname, setNickname }) => {
+  const router = useRouter();
   return (
     <>
       <Flex
@@ -61,7 +93,14 @@ const StartSection: FC<StartSectionProps> = ({ nickname }) => {
         </Heading>
       </Flex>
       <Text paddingTop={"50px"}>반갑습니다.</Text>
-      <Text fontSize={"3xl"}>{nickname} 님</Text>
+      <Text
+        fontSize={"3xl"}
+        onClick={() => {
+          setNickname("");
+        }}
+      >
+        {nickname} 님
+      </Text>
       <Box>
         <Button
           borderRadius={"2xl"}
@@ -78,6 +117,7 @@ const StartSection: FC<StartSectionProps> = ({ nickname }) => {
           }}
           colorScheme={"brand"}
           marginTop={"4rem"}
+          onClick={() => router.push("/quiz/room")}
         >
           시작하기
         </Button>
@@ -86,23 +126,22 @@ const StartSection: FC<StartSectionProps> = ({ nickname }) => {
   );
 };
 
-const QuizLobby: NextPage = () => {
+const QuizStart: NextPage = () => {
   const [nickname, setNickname] = useState("");
   return (
-    <QuizLobbyLayout>
+    <QuizStartLayout>
       <Head>
-        <title>eggjamgame - 퀴즈 로비</title>
+        <title>eggjamgame - 퀴즈 시작</title>
         <meta name="description" content="Eggjamgame. Quiz Lobby" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Fade in={true}>
-        <StartSection nickname={nickname} />
-      </Fade>
-      <Fade in={nickname !== ""}>
-        <StartSection nickname={nickname} />
-      </Fade>
-    </QuizLobbyLayout>
+      {nickname === "" ? (
+        <NicknameSection setNickname={setNickname} />
+      ) : (
+        <StartSection nickname={nickname} setNickname={setNickname} />
+      )}
+    </QuizStartLayout>
   );
 };
 
-export default QuizLobby;
+export default QuizStart;
