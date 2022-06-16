@@ -10,7 +10,7 @@ import { NextPage, GetServerSideProps } from "next";
 
 const QuizGame: NextPage = () => {
   return (
-    <QuizGameLayout quizCategory={"인물"} remainingTime={10}>
+    <QuizGameLayout quizCategory={"인물"} remainingTime={10} myScore={10}>
       <Heading
         fontFamily={"montserrat, 'Noto Sans KR'"}
         fontWeight={"700"}

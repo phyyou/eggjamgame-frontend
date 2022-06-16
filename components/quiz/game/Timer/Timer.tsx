@@ -9,13 +9,9 @@ interface Props extends BoxProps {
 const Timer: FC<Props> = ({ remainingTime, ...props }) => {
   return (
     <Box
-      display={{ base: "none", sm: "flex" }}
       justifyContent={"center"}
       alignItems={"center"}
       gap={"1rem"}
-      position={"absolute"}
-      top={"2rem"}
-      left={"3rem"}
       {...props}
     >
       <TimerIcon width={"64.9px"} height={"72.6px"} />
