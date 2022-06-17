@@ -42,6 +42,7 @@ const QuizGame: NextPage = () => {
         {(props: FormikProps<any>) => (
           <Form>
             <QuizAnswerInput
+              fontSize={"2xl"}
               id="answer"
               value={props.values.answer}
               onChange={props.handleChange}
