@@ -6,13 +6,29 @@ const fonts = {
   body: "Noto Sans KR",
 };
 
-const theme = extendTheme({
+const styles = {
   global: {
-    "html, body": {
+    "html, #__next, body": {
       height: "100%",
     },
+    "#nprogress": {
+      pointerEvents: "none",
+    },
+    "#nprogress .bar": {
+      background: "white",
+      position: "fixed",
+      zIndex: "99999",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "3px",
+    },
   },
+};
+
+const theme = extendTheme({
   fonts,
+  styles,
 });
 
 export default theme;
