@@ -44,6 +44,9 @@ const NicknameSection: FC = () => {
           textAlign: "center",
         }}
         value={_nickname}
+        onKeyUp={({ key }) => {
+          if (key === "Enter") dispatch(setNickname(_nickname));
+        }}
         onChange={(e) => {
           _setNickname(e.target.value);
         }}
