@@ -32,6 +32,8 @@ export const QuizScoreLayout: FC<Props> = ({
             {quizCategory} 퀴즈
           </Heading>
           <VStack
+            overflowY={"auto"}
+            paddingBottom={"1.5rem"}
             bgColor={{ base: "unset", md: "#FFD494" }}
             height={"70vh"}
             width={{ base: "100%", md: "66vw" }}
