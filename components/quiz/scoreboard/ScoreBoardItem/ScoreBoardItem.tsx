@@ -8,7 +8,7 @@ export const ScoreBoardItem: FC = () => {
         fontFamily={"montserrat, 'Noto Sans KR'"}
         fontWeight={"600"}
         fontSize={"4.5rem"}
-        lineHeight={"3rem"}
+        lineHeight={"2.8rem"}
       >
         1
       </Text>
@@ -20,7 +20,7 @@ export const ScoreBoardItem: FC = () => {
         위
       </Text>
       <Box width={"full"} ml={"3rem"}>
-        <Text>19년 모쏠</Text>
+        <Text mb={"5px"}>19년 모쏠</Text>
         <Box
           w={`calc(80*10)px`}
           h={"2.5rem"}

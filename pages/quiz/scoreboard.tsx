@@ -19,7 +19,7 @@ const QuizScore: FC = () => {
       <Container css={{ marginTop: "3rem!important" }} maxW="87.5%">
         <HStack width={"100%"} height={"100%"}>
           <VStack
-            gap={"2rem"}
+            gap={"3rem"}
             alignItems={"unset"}
             width={"100%"}
             height={"100%"}

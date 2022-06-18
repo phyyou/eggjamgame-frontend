@@ -7,7 +7,13 @@ const GoalBar: FC<Props> = ({ ...props }) => {
   return (
     <Box {...props}>
       <Text>Goal!</Text>
-      <Divider orientation="vertical" />
+      <Divider
+        height="100%"
+        borderLeftWidth="3px"
+        borderColor="#844f00"
+        orientation="vertical"
+        variant="dashed"
+      />
     </Box>
   );
 };
