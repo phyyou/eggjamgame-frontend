@@ -1,10 +1,10 @@
 import React, { FC, useState } from "react";
-import { Heading, VStack } from "@chakra-ui/react";
+import { Heading, StackProps, VStack } from "@chakra-ui/react";
 import { QuizBaseLayout } from ".";
 import "@fontsource/montserrat/700.css";
 import { Timer } from "components/quiz/game/Timer";
 
-interface Props {
+interface Props extends StackProps {
   quizCategory?: string;
   children?: JSX.Element | JSX.Element[] | string | string[];
   remainingTime?: number;
@@ -14,6 +14,7 @@ export const QuizScoreLayout: FC<Props> = ({
   quizCategory,
   children,
   remainingTime,
+  ...props
 }) => {
   return (
     <QuizBaseLayout>
@@ -38,6 +39,7 @@ export const QuizScoreLayout: FC<Props> = ({
             height={"70vh"}
             width={{ base: "100%", md: "66vw" }}
             rounded={"3xl"}
+            {...props}
           >
             {children}
           </VStack>

@@ -7,14 +7,14 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import { nicknameSlice, NicknameState } from "features/nickname";
+import { userSlice, userState } from "features/user";
 
 interface ReducerState {
-  nickname: NicknameState;
+  user: userState;
 }
 
 const combinedReducer = combineReducers({
-  nickname: nicknameSlice.reducer,
+  user: userSlice.reducer,
 });
 
 const rootReducer = (

@@ -1,16 +1,52 @@
-import { Heading, Image, Text } from "@chakra-ui/react";
-import { useAppSelector } from "app/hooks";
+import { Heading, Image, Spinner, Text, useInterval } from "@chakra-ui/react";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import { wrapper } from "app/store";
+import axios from "axios";
 import { QuizAnswerInput } from "components/quiz/game/QuizAnswerInput";
 import { getCookie } from "cookies-next";
-import { selectNickname, setNickname } from "features/nickname";
-import { Field, Form, Formik, FormikProps } from "formik";
+import { selectUser, setNickname, setUserScore } from "features/user";
+import { Form, Formik, FormikProps } from "formik";
 import { QuizGameLayout } from "layouts";
+import { INITIAL_REMAINING_TIME } from "lib/constant";
+import { useRandomQuiz } from "lib/hooks/useQuiz";
 import { NextPage, GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const QuizGame: NextPage = () => {
+  const { isLoading, error, data, mutate } = useRandomQuiz();
+  const [isAnswer, setIsAnswer] = useState<null | boolean>(null);
+  const [remainingTime, setRemainingTime] = useState(INITIAL_REMAINING_TIME);
+  const { nickname, score } = useAppSelector(selectUser);
+  const quizIndex = getCookie("quiz-index");
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  useEffect(() => {
+    mutate();
+  }, []);
+  useEffect(() => {
+    if (remainingTime === 0) {
+      setIsAnswer(null);
+      if (typeof quizIndex === "string" && +quizIndex === 10) {
+        router.push("/quiz/result");
+      }
+      mutate();
+      setRemainingTime(INITIAL_REMAINING_TIME);
+    }
+  }, [remainingTime]);
+  useInterval(() => setRemainingTime(remainingTime - 1), 1000);
+  if (isLoading)
+    return (
+      <QuizGameLayout quizCategory="배우" justifyContent={"center"}>
+        <Spinner />
+      </QuizGameLayout>
+    );
   return (
-    <QuizGameLayout quizCategory={"인물"} remainingTime={10} myScore={10}>
+    <QuizGameLayout
+      quizCategory={"배우"}
+      remainingTime={remainingTime}
+      userScore={score}
+    >
       <Heading
         fontFamily={"montserrat, 'Noto Sans KR'"}
         fontWeight={"700"}
@@ -18,30 +54,42 @@ const QuizGame: NextPage = () => {
         aria-label="quizGameNumber"
         mt={"8"}
       >
-        01
+        {typeof quizIndex === "string" && quizIndex.padStart(2, "0")}
       </Heading>
       <Image
         maxH={"400px"}
-        mt={"1.5rem"}
-        src="https://blog.kakaocdn.net/dn/2whsQ/btrpz2FR1r1/TFvXkfkz3qWYjvz3nKgqI1/img.jpg"
-      ></Image>
-      <Text css={{ marginTop: "0.5rem!important" }} fontSize={"2rem"}>
-        박효진 님 정답!
+        css={{ marginTop: "2.5rem!important" }}
+        src={data?.quiz.description}
+      />
+      <Text css={{ marginTop: "3rem!important" }} fontSize={"2rem"}>
+        {isAnswer === true
+          ? `${nickname}님 정답입니다`
+          : `${isAnswer !== null ? "틀렸습니다!" : ""}`}
       </Text>
-      <Text mt={"0px"} fontSize={"2rem"}>
-        정답은 정희숙 입니다!
-      </Text>
+
       <Formik
         initialValues={{
           answer: "",
         }}
         onSubmit={async (values) => {
-          alert(JSON.stringify(values, null, 2));
+          if (!isAnswer && typeof data !== "undefined") {
+            const res = await axios.post("/api/quiz/answer", {
+              answer: values.answer,
+              id: data.quiz.id,
+            });
+            setIsAnswer(res.data.answer);
+            if (res.data.answer) dispatch(setUserScore(score + 1));
+          }
         }}
       >
         {(props: FormikProps<any>) => (
           <Form>
             <QuizAnswerInput
+              w={{ base: "50vw", md: "16rem" }}
+              ml={{ md: "-8rem" }}
+              position={"absolute"}
+              left={"50vw"}
+              bottom={"5vh"}
               fontSize={"2xl"}
               id="answer"
               value={props.values.answer}
@@ -63,7 +111,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
       store.dispatch(setNickname(_nickname));
     }
     const {
-      nickname: { nickname },
+      user: { nickname },
     } = store.getState();
     if (nickname === "") {
       return {

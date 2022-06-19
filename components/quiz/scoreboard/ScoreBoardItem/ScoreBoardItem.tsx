@@ -44,20 +44,33 @@ export const ScoreBoardItem: FC<Props> = ({
         paddingInlineStart={"2rem"}
       >
         <Text mb={"5px"}>{nickname}</Text>
-        <Box
-          w={`${10 * score}%`}
-          h={"2.5rem"}
-          border={"solid"}
-          boxSizing={"border-box"}
-          borderColor={"white"}
-          borderRadius={"full"}
-          textAlign={"center"}
-          lineHeight={"calc(2.5rem - 3px)"}
-          color={"white"}
-          bgColor={barColor}
-        >
-          {score}
-        </Box>
+        {score === 0 ? (
+          <Box
+            w={`100%`}
+            h={"2.5rem"}
+            boxSizing={"border-box"}
+            borderRadius={"full"}
+            textAlign={"center"}
+            lineHeight={"calc(2.5rem)"}
+          >
+            점수가 없어요...
+          </Box>
+        ) : (
+          <Box
+            w={`${10 * score}%`}
+            h={"2.5rem"}
+            border={"solid"}
+            boxSizing={"border-box"}
+            borderColor={"white"}
+            borderRadius={"full"}
+            textAlign={"center"}
+            lineHeight={"calc(2.5rem - 3px)"}
+            color={"white"}
+            bgColor={barColor}
+          >
+            {score}
+          </Box>
+        )}
       </Box>
     </Flex>
   );

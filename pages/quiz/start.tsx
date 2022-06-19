@@ -13,7 +13,7 @@ import {
 import { QuizStartLayout } from "@layouts/quiz";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import { selectNickname, setNickname } from "features/nickname";
+import { selectNickname, setNickname } from "features/user";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { setCookies } from "cookies-next";
 

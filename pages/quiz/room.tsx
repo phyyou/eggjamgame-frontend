@@ -10,8 +10,8 @@ import {
 import { useRouter } from "next/router";
 import { wrapper } from "app/store";
 import { useAppSelector } from "app/hooks";
-import { setNickname } from "features/nickname";
-import { getCookie } from "cookies-next";
+import { setNickname } from "features/user";
+import { getCookie, setCookies } from "cookies-next";
 
 const QuizRoom: NextPage = () => {
   const router = useRouter();
@@ -37,6 +37,7 @@ const QuizRoom: NextPage = () => {
           title={"방 만들기"}
           description={"직접 방을 생성합니다."}
           onClick={() => {
+            setCookies("quiz-index", 0);
             router.push("/quiz/game");
           }}
         />
@@ -60,7 +61,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
       store.dispatch(setNickname(_nickname));
     }
     const {
-      nickname: { nickname },
+      user: { nickname },
     } = store.getState();
     if (nickname === "") {
       return {

@@ -1,15 +1,24 @@
-import { Heading, Container, VStack, HStack, Box } from "@chakra-ui/react";
+import {
+  Heading,
+  Container,
+  VStack,
+  HStack,
+  Box,
+  Button,
+} from "@chakra-ui/react";
 import { QuizScoreLayout } from "layouts";
 import { FC, useState } from "react";
 import { ScoreBoardItem } from "components/quiz/scoreboard/ScoreBoardItem";
 import { GoalBar } from "components/quiz/scoreboard/GoalBar";
-import { selectNickname } from "features/nickname";
+import { selectUser } from "features/user";
 import { useAppSelector } from "app/hooks";
+import { useRouter } from "next/router";
 
 const QuizScore: FC = () => {
-  const nickname = useAppSelector(selectNickname);
+  const { nickname, score } = useAppSelector(selectUser);
+  const router = useRouter();
   return (
-    <QuizScoreLayout quizCategory={"인물"} remainingTime={10}>
+    <QuizScoreLayout quizCategory={"배우"}>
       <Heading
         fontFamily={"montserrat, 'Noto Sans KR'"}
         fontWeight={"700"}
@@ -17,7 +26,7 @@ const QuizScore: FC = () => {
         aria-label="quizGameNumber"
         mt={"16"}
       >
-        점수 현황
+        최종 점수
       </Heading>
       <Container css={{ marginTop: "3rem!important" }} maxW="55vw">
         <HStack width={"100%"} height={"100%"} position={"relative"}>
@@ -26,16 +35,14 @@ const QuizScore: FC = () => {
             alignItems={"unset"}
             width={"100%"}
             height={"100%"}
+            minH={"45vh"}
           >
             {[
               {
-                score: 10,
-                nickname: "19년 모쏠",
+                score: score,
+                nickname: nickname,
                 barColor: "#9A8AFF",
               },
-              { score: 5, nickname: "19년 모쏠", barColor: "#FF6C6C" },
-              { score: 3, nickname: "19년 모쏠", barColor: "#68ED66" },
-              { score: 1, nickname: "19년 모쏠", barColor: "#BC50FF" },
             ].map((ranks, idx) => (
               <ScoreBoardItem
                 {...ranks}
@@ -54,6 +61,20 @@ const QuizScore: FC = () => {
             height={"120%"}
           />
         </HStack>
+        <Button
+          pos={"absolute"}
+          w={"100px"}
+          bottom={"2rem"}
+          left={"calc(50% - 50px);"}
+          borderRadius={"full"}
+          bgColor={"#844F00"}
+          color={"white"}
+          onClick={() => {
+            router.push("/quiz/room");
+          }}
+        >
+          다시하기
+        </Button>
       </Container>
     </QuizScoreLayout>
   );
