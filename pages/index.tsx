@@ -1,7 +1,7 @@
 import { Container, Flex, Heading, VStack } from "@chakra-ui/react";
 import type {
-  GetStaticPropsContext,
-  GetStaticPropsResult,
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
   NextPage,
 } from "next";
 import Head from "next/head";
@@ -26,9 +26,9 @@ const Home: NextPage = () => {
   );
 };
 
-export async function getStaticProps(
-  ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<Props>> {
+export async function getServerSideProps(
+  ctx: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<Props>> {
   return {
     redirect: {
       destination: "/quiz/start",

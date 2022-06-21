@@ -1,13 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+nextConfig = {
   reactStrictMode: true,
-  redirects: async () => [
-    {
-      source: "/",
-      destination: "/quiz/start",
-      permanent: false,
-    },
-  ],
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/quiz/start",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 module.exports = {
