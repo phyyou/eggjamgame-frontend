@@ -1,6 +1,12 @@
 import { Container, Flex, Heading, VStack } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import Head from "next/head";
+
+interface Props {}
 
 const Home: NextPage = () => {
   return (
@@ -19,5 +25,16 @@ const Home: NextPage = () => {
     </Container>
   );
 };
+
+export async function getStaticProps(
+  ctx: GetStaticPropsContext
+): Promise<GetStaticPropsResult<Props>> {
+  return {
+    redirect: {
+      destination: "/quiz/start",
+      permanent: false,
+    },
+  };
+}
 
 export default Home;
