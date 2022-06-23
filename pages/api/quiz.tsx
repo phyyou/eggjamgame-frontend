@@ -5,8 +5,8 @@ const getRandomQuiz: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { quizIndex } = req.query;
-  const quizzes = await getQuizesByCategory(1);
+  const { quizIndex, quizCategory } = req.query;
+  const quizzes = await getQuizesByCategory(+quizCategory);
   const quiz = quizzes[+quizIndex + 1];
   res.status(200).json({
     quiz: {

@@ -7,7 +7,7 @@ import { getCookie } from "cookies-next";
 import { selectUser, setNickname, setUserScore } from "features/user";
 import { Form, Formik, FormikProps } from "formik";
 import { QuizGameLayout } from "layouts";
-import { INITIAL_REMAINING_TIME } from "lib/constant";
+import { INITIAL_REMAINING_TIME, QUIZ_CATEGORY_NAME } from "lib/constant";
 import { useRandomQuiz } from "lib/hooks/useQuiz";
 import { NextPage, GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -19,6 +19,7 @@ const QuizGame: NextPage = () => {
   const [remainingTime, setRemainingTime] = useState(INITIAL_REMAINING_TIME);
   const { nickname, score } = useAppSelector(selectUser);
   const quizIndex = getCookie("quiz-index");
+  const quizCategory = getCookie("quiz-category");
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {
@@ -37,13 +38,24 @@ const QuizGame: NextPage = () => {
   useInterval(() => setRemainingTime(remainingTime - 1), 1000);
   if (isLoading)
     return (
-      <QuizGameLayout quizCategory="배우" justifyContent={"center"}>
+      <QuizGameLayout
+        quizCategory={
+          typeof quizCategory === "string"
+            ? QUIZ_CATEGORY_NAME[+quizCategory]
+            : undefined
+        }
+        justifyContent={"center"}
+      >
         <Spinner />
       </QuizGameLayout>
     );
   return (
     <QuizGameLayout
-      quizCategory={"배우"}
+      quizCategory={
+        typeof quizCategory === "string"
+          ? QUIZ_CATEGORY_NAME[+quizCategory]
+          : undefined
+      }
       remainingTime={remainingTime}
       userScore={score}
     >

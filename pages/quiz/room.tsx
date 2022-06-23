@@ -12,6 +12,7 @@ import { wrapper } from "app/store";
 import { useAppSelector } from "app/hooks";
 import { setNickname } from "features/user";
 import { getCookie, setCookies } from "cookies-next";
+import { QUIZ_CATEGORIES } from "lib/constant";
 
 const QuizRoom: NextPage = () => {
   const router = useRouter();
@@ -38,6 +39,12 @@ const QuizRoom: NextPage = () => {
           description={"직접 방을 생성합니다."}
           onClick={() => {
             setCookies("quiz-index", 0);
+            setCookies(
+              "quiz-category",
+              QUIZ_CATEGORIES[
+                Math.floor(Math.random() * QUIZ_CATEGORIES.length)
+              ]
+            );
             router.push("/quiz/game");
           }}
         />
